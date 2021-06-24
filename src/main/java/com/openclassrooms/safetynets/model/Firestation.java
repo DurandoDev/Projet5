@@ -3,7 +3,7 @@ package com.openclassrooms.safetynets.model;
 import lombok.Data;
 
 @Data
-public class firestation {
+public class Firestation {
 
 	private String adress;
 

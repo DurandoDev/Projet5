@@ -7,7 +7,7 @@ import java.util.Date;
 import java.util.List;
 
 @Data
-public class medicalrecords {
+public class Medicalrecords {
 
 	private String firstname;
 
@@ -15,7 +15,7 @@ public class medicalrecords {
 
 	private Date birthdate;
 
-	private List<String> medications = new ArrayList<String>();
+	private List<String> medications = new ArrayList<>();
 
-	private List<String> allergies = new ArrayList<String>();
+	private List<String> allergies = new ArrayList<>();
 }

@@ -3,7 +3,7 @@ package com.openclassrooms.safetynets.model;
 import lombok.Data;
 
 @Data
-public class person {
+public class Person {
 
 	private String firstName;
 
