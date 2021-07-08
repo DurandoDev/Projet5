@@ -6,6 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface FireStationRepo extends JpaRepository<Firestation, Long> {
+public interface FireStationRepo extends JpaRepository<Firestation, Integer> {
 	Firestation findById(int id);
 }

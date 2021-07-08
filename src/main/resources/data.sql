@@ -55,7 +55,7 @@ INSERT INTO firestation (address, station) VALUES
 ('748 Townings Dr',3),
 ('951 LoneTree Rd',2);
 
-CREATE TABLE medicalrecords (id bigint AUTO_INCREMENT PRIMARY KEY,
+CREATE TABLE medicalrecords (id int AUTO_INCREMENT PRIMARY KEY,
                             birthdate date,
                             firstname varchar(255),
                             lastname varchar(255),

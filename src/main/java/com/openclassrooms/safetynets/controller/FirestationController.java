@@ -19,16 +19,13 @@ public class FirestationController {
 	@Autowired
 	private FireStationRepo fireStationRepo;
 
-	@Autowired
-	private MedicalRecordsRepo medicalRecordsRepo;
-
-	@GetMapping(value = "Firestations")
+	@GetMapping(value = "firestation")
 	public List<Firestation> listeFirestation() { return fireStationRepo.findAll(); }
 
-	@GetMapping(value = "Firestations/{id}")
+	@GetMapping(value = "firestation/{id}")
 	public Firestation afficherUneFireStation(@PathVariable int id){return fireStationRepo.findById(id);}
 
-	@PostMapping(value = "Firestations")
+	@PostMapping(value = "firestation")
 	public ResponseEntity<Void> addFireStation(@RequestBody Firestation firestation){
 
 		Firestation firestation1 = fireStationRepo.save(firestation);
@@ -45,5 +42,8 @@ public class FirestationController {
 
 		return ResponseEntity.created(location).build();
 	}
+
+	@DeleteMapping(value = "firestation/{id}")
+	public void deleteFirestation(@PathVariable int id){fireStationRepo.deleteById(id);}
 
 }

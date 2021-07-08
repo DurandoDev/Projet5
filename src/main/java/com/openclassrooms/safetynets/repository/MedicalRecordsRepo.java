@@ -6,5 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface MedicalRecordsRepo extends JpaRepository<Medicalrecords, Long> {
+public interface MedicalRecordsRepo extends JpaRepository<Medicalrecords, Integer> {
+	Medicalrecords findById(int id);
 }

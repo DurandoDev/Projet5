@@ -13,7 +13,7 @@ public class Medicalrecords {
 
 	@Id
 	@GeneratedValue
-	private Long id;
+	private int id;
 
 	private String firstname;
 
