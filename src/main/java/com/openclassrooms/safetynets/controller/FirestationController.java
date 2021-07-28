@@ -1,17 +1,16 @@
 package com.openclassrooms.safetynets.controller;
 
 import com.openclassrooms.safetynets.model.Firestation;
-import com.openclassrooms.safetynets.model.Person;
 import com.openclassrooms.safetynets.repository.FireStationRepo;
-import com.openclassrooms.safetynets.repository.MedicalRecordsRepo;
-import com.openclassrooms.safetynets.repository.PersonRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 public class FirestationController {
@@ -44,6 +43,20 @@ public class FirestationController {
 	}
 
 	@DeleteMapping(value = "firestation/{id}")
-	public void deleteFirestation(@PathVariable int id){fireStationRepo.deleteById(id);}
+	public void deleteFirestation(@PathVariable long id){fireStationRepo.deleteById(id);}
+
+	@PutMapping(value = "/firestation/{id}")
+	public ResponseEntity<Firestation> updateFirestation(@PathVariable("id") long id, @RequestBody Firestation firestation) {
+		Optional<Firestation> firestationData = Optional.ofNullable(fireStationRepo.findById(id));
+
+		if (firestationData.isPresent()) {
+			Firestation firestation1 = firestationData.get();
+			firestation1.setAddress(firestation.getAddress());
+			firestation1.setStation(firestation.getStation());
+			return new ResponseEntity<>(fireStationRepo.save(firestation1), HttpStatus.OK);
+		} else {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+	}
 
 }

@@ -1,5 +1,5 @@
 CREATE TABLE person (
-    id INT AUTO_INCREMENT  PRIMARY KEY,
+    id BIGINT AUTO_INCREMENT  PRIMARY KEY,
     first_name VARCHAR (250) NOT NULL,
      last_name VARCHAR (250) NOT NULL,
      address VARCHAR (250) NOT NULL,
@@ -36,7 +36,7 @@ INSERT INTO person (first_name, last_name, address, city, zip, phone, email) VAL
 ('Eric','Cadigan','951 LoneTree Rd','Culver',97451,'841-874-7458','gramps@email.com');
 
 
-CREATE TABLE firestation(id INT AUTO_INCREMENT  PRIMARY KEY,
+CREATE TABLE firestation(id BIGINT AUTO_INCREMENT  PRIMARY KEY,
                         address VARCHAR (250) NOT NULL,
                          station INT NOT NULL);
 
@@ -55,7 +55,7 @@ INSERT INTO firestation (address, station) VALUES
 ('748 Townings Dr',3),
 ('951 LoneTree Rd',2);
 
-CREATE TABLE medicalrecords (id int AUTO_INCREMENT PRIMARY KEY,
+CREATE TABLE medicalrecords (id BIGINT AUTO_INCREMENT PRIMARY KEY,
                             birthdate date,
                             firstname varchar(255),
                             lastname varchar(255),

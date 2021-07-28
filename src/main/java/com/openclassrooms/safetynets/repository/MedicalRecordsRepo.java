@@ -5,7 +5,11 @@ import com.openclassrooms.safetynets.model.Person;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
+
 @Repository
-public interface MedicalRecordsRepo extends JpaRepository<Medicalrecords, Integer> {
-	Medicalrecords findById(int id);
+public interface MedicalRecordsRepo extends JpaRepository<Medicalrecords, Long> {
+	Medicalrecords findById(long id);
+
+	Medicalrecords findByBirthdate(Date birthdate);
 }
