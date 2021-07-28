@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-public abstract class PersonController {
+public class PersonController {
 
 	@Autowired
 	private PersonRepo personRepo;
@@ -65,7 +65,7 @@ public abstract class PersonController {
 		}
 	}
 
-	@GetMapping(value = "/childAlert?address={address}")
-	public List<Person> listChildAtAnAddress(@PathVariable String address){return personRepo.findPersonUnder18YearsAtAnAddress(address);}
+	@GetMapping(value = "/childAlert")
+	public List<Person> listChildAtAnAddress(@RequestParam(value = "address")String address){return personRepo.findPersonUnder18YearsAtAnAddress(address);}
 
 }
