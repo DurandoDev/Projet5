@@ -1,10 +1,8 @@
 package com.openclassrooms.safetynets.controller;
 
-import com.openclassrooms.safetynets.model.Medicalrecords;
 import com.openclassrooms.safetynets.model.Person;
 import com.openclassrooms.safetynets.repository.PersonRepo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -66,6 +64,12 @@ public class PersonController {
 	}
 
 	@GetMapping(value = "/childAlert")
-	public List<Person> listChildAtAnAddress(@RequestParam(value = "address")String address){return personRepo.findPersonUnder18YearsAtAnAddress(address);}
+	public List<Person> listChildAtAnAddress(@RequestParam(value = "address")String address){
+
+		List<Person> childs = personRepo.findPersonUnder18YearsAtAnAddress(address);
+
+		return childs;
+
+	}
 
 }
