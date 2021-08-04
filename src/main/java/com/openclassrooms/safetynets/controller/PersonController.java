@@ -1,10 +1,14 @@
 package com.openclassrooms.safetynets.controller;
 
+import com.fasterxml.jackson.databind.ser.FilterProvider;
+import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
+import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import com.openclassrooms.safetynets.model.Person;
 import com.openclassrooms.safetynets.repository.PersonRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -64,11 +68,19 @@ public class PersonController {
 	}
 
 	@GetMapping(value = "/childAlert")
-	public List<Person> listChildAtAnAddress(@RequestParam(value = "address")String address){
+	public MappingJacksonValue listChildAtAnAddress(@RequestParam(value = "address")String address){
 
-		List<Person> childs = personRepo.findPersonUnder18YearsAtAnAddress(address);
+		List<Person> personList = personRepo.findPersonUnder18YearsAtAnAddress(address);
 
-		return childs;
+		SimpleBeanPropertyFilter myFilter = SimpleBeanPropertyFilter.filterOutAllExcept("firstName","lastName");
+
+		FilterProvider filters = new SimpleFilterProvider().addFilter("monFiltre", myFilter);
+
+		MappingJacksonValue personFilters = new MappingJacksonValue(personList);
+
+		personFilters.setFilters(filters);
+
+		return personFilters;
 
 	}
 

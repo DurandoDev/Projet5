@@ -1,10 +1,15 @@
 package com.openclassrooms.safetynets.controller;
 
+import com.fasterxml.jackson.databind.ser.FilterProvider;
+import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
+import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import com.openclassrooms.safetynets.model.Firestation;
+import com.openclassrooms.safetynets.model.Person;
 import com.openclassrooms.safetynets.repository.FireStationRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -57,6 +62,30 @@ public class FirestationController {
 		} else {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
+	}
+
+	@GetMapping(value = "/firestationPeople")
+	public MappingJacksonValue listAllAtAStation(@RequestParam(value = "station")Integer station){
+
+		List<Person> firestationList = fireStationRepo.findAllAtAStation(station);
+
+		SimpleBeanPropertyFilter myFilter = SimpleBeanPropertyFilter.filterOutAllExcept("firstName","lastName","address","phone");
+
+		FilterProvider filters = new SimpleFilterProvider().addFilter("monFiltre", myFilter);
+
+		MappingJacksonValue fireStationFilters = new MappingJacksonValue(firestationList);
+
+		fireStationFilters.setFilters(filters);
+
+		return fireStationFilters;
+
+	}
+
+	@GetMapping(value = "/phoneAlert")
+	public List<Person> listPhoneAtAStation(@RequestParam(value = "station")Integer station){
+
+		return fireStationRepo.findPhoneAtAStation(station);
+
 	}
 
 }

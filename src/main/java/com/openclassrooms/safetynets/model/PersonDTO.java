@@ -1,19 +1,13 @@
 package com.openclassrooms.safetynets.model;
 
-import com.fasterxml.jackson.annotation.JsonFilter;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 
-import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Data
-@Entity
-@JsonIgnoreProperties(value = {"id"})
-@JsonFilter("monFiltre")
-public class Person {
+public class PersonDTO {
 
 	private String firstName;
 
@@ -30,7 +24,7 @@ public class Person {
 	private String email;
 
 	@Id
-	@GeneratedValue (strategy= GenerationType.AUTO)
+	@GeneratedValue(strategy= GenerationType.AUTO)
 	private long id;
 
 }
