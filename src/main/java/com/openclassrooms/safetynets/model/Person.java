@@ -11,7 +11,7 @@ import javax.persistence.Id;
 
 @Data
 @Entity
-@JsonIgnoreProperties(value = {"id"})
+@JsonIgnoreProperties(value = {"id","city","zip","email"})
 @JsonFilter("monFiltre")
 public class Person {
 

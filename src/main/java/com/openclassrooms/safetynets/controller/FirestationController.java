@@ -3,9 +3,11 @@ package com.openclassrooms.safetynets.controller;
 import com.fasterxml.jackson.databind.ser.FilterProvider;
 import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
+import com.openclassrooms.safetynets.dto.FirestationDTO;
 import com.openclassrooms.safetynets.model.Firestation;
 import com.openclassrooms.safetynets.model.Person;
 import com.openclassrooms.safetynets.repository.FireStationRepo;
+import com.openclassrooms.safetynets.repository.PersonRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +24,9 @@ public class FirestationController {
 
 	@Autowired
 	private FireStationRepo fireStationRepo;
+
+	@Autowired
+	private PersonRepo personRepo;
 
 	@GetMapping(value = "firestation")
 	public List<Firestation> listeFirestation() { return fireStationRepo.findAll(); }
@@ -65,26 +70,46 @@ public class FirestationController {
 	}
 
 	@GetMapping(value = "/firestationPeople")
-	public MappingJacksonValue listAllAtAStation(@RequestParam(value = "station")Integer station){
+	public FirestationDTO listAllAtAStation(@RequestParam(value = "station")Integer station){
 
-		List<Person> firestationList = fireStationRepo.findAllAtAStation(station);
+		List<Person> persons = fireStationRepo.findAllAtAStation(station);
+
+		List<Person> children = personRepo.findPersonUnder18YearsByFirestation(station);
+
+		List<Person> adults = personRepo.findPersonOver18YearsByFirestation(station);
 
 		SimpleBeanPropertyFilter myFilter = SimpleBeanPropertyFilter.filterOutAllExcept("firstName","lastName","address","phone");
 
 		FilterProvider filters = new SimpleFilterProvider().addFilter("monFiltre", myFilter);
 
-		MappingJacksonValue fireStationFilters = new MappingJacksonValue(firestationList);
+		MappingJacksonValue fireStationFilters = new MappingJacksonValue(persons);
 
 		fireStationFilters.setFilters(filters);
 
-		return fireStationFilters;
+		FirestationDTO listPerson = new FirestationDTO();
+
+		listPerson.setPersons(persons);
+		listPerson.setNbChildren(children.size());
+		listPerson.setNbAdults(adults.size());
+
+		return listPerson;
 
 	}
 
 	@GetMapping(value = "/phoneAlert")
-	public List<Person> listPhoneAtAStation(@RequestParam(value = "station")Integer station){
+	public MappingJacksonValue listPhoneAtAStation(@RequestParam(value = "station")Integer station){
 
-		return fireStationRepo.findPhoneAtAStation(station);
+		List<Person> phones = fireStationRepo.findPhoneAtAStation(station);
+
+		SimpleBeanPropertyFilter myFilter = SimpleBeanPropertyFilter.filterOutAllExcept("phone");
+
+		FilterProvider filters = new SimpleFilterProvider().addFilter("monFiltre", myFilter);
+
+		MappingJacksonValue phoneFilters = new MappingJacksonValue(phones);
+
+		phoneFilters.setFilters(filters);
+
+		return phoneFilters;
 
 	}
 

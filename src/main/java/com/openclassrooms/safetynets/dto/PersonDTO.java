@@ -1,4 +1,4 @@
-package com.openclassrooms.safetynets.model;
+package com.openclassrooms.safetynets.dto;
 
 import lombok.Data;
 
