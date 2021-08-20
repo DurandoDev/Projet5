@@ -1,9 +1,12 @@
 package com.openclassrooms.safetynets.controller;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.ser.FilterProvider;
 import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
+import com.openclassrooms.safetynets.dto.PersonDTO;
 import com.openclassrooms.safetynets.model.Person;
+import com.openclassrooms.safetynets.model.PersonViews;
 import com.openclassrooms.safetynets.repository.PersonRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,6 +16,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -67,21 +74,42 @@ public class PersonController {
 		}
 	}
 
+	@JsonView({PersonViews.Normal.class})
 	@GetMapping(value = "/childAlert")
-	public MappingJacksonValue listChildAtAnAddress(@RequestParam(value = "address")String address){
+	public PersonDTO listChildAtAnAddress(@RequestParam(value = "address")String address){
 
-		List<Person> personList = personRepo.findPersonUnder18YearsAtAnAddress(address);
+		LocalDate dateNow = LocalDate.now();
+		dateNow = dateNow.minusYears(18);
 
-		SimpleBeanPropertyFilter myFilter = SimpleBeanPropertyFilter.filterOutAllExcept("firstName","lastName");
+		ZoneId defaultZoneId = ZoneId.systemDefault();
 
-		FilterProvider filters = new SimpleFilterProvider().addFilter("monFiltre", myFilter);
+		Date date = Date.from(dateNow.atStartOfDay(defaultZoneId).toInstant());
 
-		MappingJacksonValue personFilters = new MappingJacksonValue(personList);
+		List<Person> personList = personRepo.findPersonUnder18YearsAtAnAddress(address, date);
 
-		personFilters.setFilters(filters);
+		List<Person> nbPersons = personRepo.findPersonAtAnAddress(address);
 
-		return personFilters;
+		PersonDTO listPerson = new PersonDTO();
+
+		listPerson.setChildren(personList);
+		listPerson.setPersons(nbPersons);
+
+		return listPerson;
 
 	}
+
+//	@JsonView({PersonViews.Normal.class})
+//	@GetMapping(value = "/fire")
+//	public FirestationDTO listPeopleAtAStation(@RequestParam(value = "address")String address){
+//
+//		List<Person> persons = fireStationRepo.findAllAtAStation(station);
+//
+//		FirestationDTO listPerson = new FirestationDTO();
+//
+//		listPerson.setPersons(persons);
+//
+//		return listPerson;
+//
+//	}
 
 }

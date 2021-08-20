@@ -1,11 +1,13 @@
 package com.openclassrooms.safetynets.controller;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.ser.FilterProvider;
 import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import com.openclassrooms.safetynets.dto.FirestationDTO;
 import com.openclassrooms.safetynets.model.Firestation;
 import com.openclassrooms.safetynets.model.Person;
+import com.openclassrooms.safetynets.model.PersonViews;
 import com.openclassrooms.safetynets.repository.FireStationRepo;
 import com.openclassrooms.safetynets.repository.PersonRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,6 +71,7 @@ public class FirestationController {
 		}
 	}
 
+	@JsonView({PersonViews.NormalPhone.class})
 	@GetMapping(value = "/firestationPeople")
 	public FirestationDTO listAllAtAStation(@RequestParam(value = "station")Integer station){
 
@@ -77,14 +80,6 @@ public class FirestationController {
 		List<Person> children = personRepo.findPersonUnder18YearsByFirestation(station);
 
 		List<Person> adults = personRepo.findPersonOver18YearsByFirestation(station);
-
-		SimpleBeanPropertyFilter myFilter = SimpleBeanPropertyFilter.filterOutAllExcept("firstName","lastName","address","phone");
-
-		FilterProvider filters = new SimpleFilterProvider().addFilter("monFiltre", myFilter);
-
-		MappingJacksonValue fireStationFilters = new MappingJacksonValue(persons);
-
-		fireStationFilters.setFilters(filters);
 
 		FirestationDTO listPerson = new FirestationDTO();
 
@@ -96,21 +91,20 @@ public class FirestationController {
 
 	}
 
+	@JsonView(PersonViews.Phone.class)
 	@GetMapping(value = "/phoneAlert")
-	public MappingJacksonValue listPhoneAtAStation(@RequestParam(value = "station")Integer station){
+	public FirestationDTO listPhoneAtAStation(@RequestParam(value = "station")Integer station){
 
 		List<Person> phones = fireStationRepo.findPhoneAtAStation(station);
 
-		SimpleBeanPropertyFilter myFilter = SimpleBeanPropertyFilter.filterOutAllExcept("phone");
+		FirestationDTO listPhones = new FirestationDTO();
 
-		FilterProvider filters = new SimpleFilterProvider().addFilter("monFiltre", myFilter);
+		listPhones.setPhones(phones);
 
-		MappingJacksonValue phoneFilters = new MappingJacksonValue(phones);
-
-		phoneFilters.setFilters(filters);
-
-		return phoneFilters;
+		return listPhones;
 
 	}
+
+
 
 }

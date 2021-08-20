@@ -12,4 +12,5 @@ public interface MedicalRecordsRepo extends JpaRepository<Medicalrecords, Long> 
 	Medicalrecords findById(long id);
 
 	Medicalrecords findByBirthdate(Date birthdate);
+
 }

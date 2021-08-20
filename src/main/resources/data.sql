@@ -87,7 +87,8 @@ INSERT INTO medicalrecords (birthdate, firstname, lastname) VALUES
 ('1945-08-06','Eric','Cadigan');
 
 CREATE TABLE medicalrecords_allergies (medicalrecords_id bigint not null,
-                                        allergies varchar(255));
+                                        allergies varchar(255),
+                                        id BIGINT AUTO_INCREMENT PRIMARY KEY);
 
 INSERT INTO medicalrecords_allergies (medicalrecords_id, allergies) VALUES
 (1,'nillacilan'),

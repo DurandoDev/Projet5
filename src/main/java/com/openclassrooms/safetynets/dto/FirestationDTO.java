@@ -1,23 +1,23 @@
 package com.openclassrooms.safetynets.dto;
 
-import com.fasterxml.jackson.annotation.JsonFilter;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.openclassrooms.safetynets.model.Firestation;
+import com.fasterxml.jackson.annotation.JsonView;
 import com.openclassrooms.safetynets.model.Person;
+import com.openclassrooms.safetynets.model.PersonViews;
 import lombok.Data;
-import org.springframework.http.converter.json.MappingJacksonValue;
-
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import java.util.List;
 
 @Data
 public class FirestationDTO {
 
+	@JsonView(PersonViews.Normal.class)
 	Integer nbAdults;
-	
+
+	@JsonView(PersonViews.Normal.class)
 	Integer nbChildren;
 
+	@JsonView(PersonViews.Normal.class)
 	List<Person> persons;
+
+	@JsonView(PersonViews.Phone.class)
+	List<Person> phones;
 }

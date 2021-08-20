@@ -1,30 +1,25 @@
 package com.openclassrooms.safetynets.dto;
 
+import com.fasterxml.jackson.annotation.JsonView;
+import com.openclassrooms.safetynets.model.Person;
+import com.openclassrooms.safetynets.model.PersonViews;
 import lombok.Data;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
 
 @Data
 public class PersonDTO {
 
-	private String firstName;
+	Integer nbPersons;
 
-	private String lastName;
+	String empty = "";
 
-	private String address;
+	@JsonView(PersonViews.Normal.class)
+	List<Person> children;
 
-	private String city;
-
-	private Integer zip;
-
-	private String phone;
-
-	private String email;
-
-	@Id
-	@GeneratedValue(strategy= GenerationType.AUTO)
-	private long id;
+	@JsonView(PersonViews.Normal.class)
+	List<Person> persons;
 
 }
