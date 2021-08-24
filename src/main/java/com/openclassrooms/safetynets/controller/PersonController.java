@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ser.FilterProvider;
 import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import com.openclassrooms.safetynets.dto.PersonDTO;
+import com.openclassrooms.safetynets.model.Firestation;
 import com.openclassrooms.safetynets.model.Person;
 import com.openclassrooms.safetynets.model.PersonViews;
 import com.openclassrooms.safetynets.repository.PersonRepo;
@@ -98,18 +99,20 @@ public class PersonController {
 
 	}
 
-//	@JsonView({PersonViews.Normal.class})
-//	@GetMapping(value = "/fire")
-//	public FirestationDTO listPeopleAtAStation(@RequestParam(value = "address")String address){
-//
-//		List<Person> persons = fireStationRepo.findAllAtAStation(station);
-//
-//		FirestationDTO listPerson = new FirestationDTO();
-//
-//		listPerson.setPersons(persons);
-//
-//		return listPerson;
-//
-//	}
+	@JsonView({PersonViews.Normal.class})
+	@GetMapping(value = "/fire")
+	public PersonDTO listPeopleAtAStation(@RequestParam(value = "address")String address){
+
+		List<Person> persons = personRepo.findPersonAtAnAddress(address);
+		List<Firestation> firestations = personRepo.findFirestationsByAddress(address);
+
+		PersonDTO listPerson = new PersonDTO();
+
+		listPerson.setPersons(persons);
+		listPerson.setFirestations(firestations);
+
+		return listPerson;
+
+	}
 
 }

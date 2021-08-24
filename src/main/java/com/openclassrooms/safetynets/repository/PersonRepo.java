@@ -1,5 +1,6 @@
 package com.openclassrooms.safetynets.repository;
 
+import com.openclassrooms.safetynets.model.Firestation;
 import com.openclassrooms.safetynets.model.Medicalrecords;
 import com.openclassrooms.safetynets.model.Person;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -36,5 +37,8 @@ public interface PersonRepo extends JpaRepository<Person, Long> {
 
 //	@Query(value = "SELECT p FROM Person p INNER JOIN Medicalrecords_allergies m ON p.firstName = m.firstname AND p.lastName = m.lastname")
 //	List<Medicalrecords> findMedicationsAndAllergies(String address);
+
+	@Query(value = "SELECT f FROM Firestation f INNER JOIN Person p ON f.address = p.address WHERE p.address= ?1")
+	List<Firestation> findFirestationsByAddress(String address);
 
 }

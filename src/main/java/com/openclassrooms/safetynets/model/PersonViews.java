@@ -2,15 +2,15 @@ package com.openclassrooms.safetynets.model;
 
 public class PersonViews {
 
-	public static interface Normal{
+	public interface Normal{
 
 	}
 
-	public static interface Phone{
+	public interface Phone{
 
 	}
 
-	public static interface NormalPhone extends Normal,Phone{
+	public interface NormalPhone extends Normal,Phone{
 
 	}
 

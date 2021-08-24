@@ -1,6 +1,7 @@
 package com.openclassrooms.safetynets.dto;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import com.openclassrooms.safetynets.model.Firestation;
 import com.openclassrooms.safetynets.model.Person;
 import com.openclassrooms.safetynets.model.PersonViews;
 import lombok.Data;
@@ -21,5 +22,8 @@ public class PersonDTO {
 
 	@JsonView(PersonViews.Normal.class)
 	List<Person> persons;
+
+	@JsonView(PersonViews.Normal.class)
+	List<Firestation> firestations;
 
 }

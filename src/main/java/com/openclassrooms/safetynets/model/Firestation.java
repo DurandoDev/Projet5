@@ -1,5 +1,6 @@
 package com.openclassrooms.safetynets.model;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import lombok.Data;
 
 import javax.persistence.Entity;
@@ -13,6 +14,7 @@ public class Firestation {
 
 	private String address;
 
+	@JsonView(FirestationViews.Normal.class)
 	private Integer station;
 
 	@Id
