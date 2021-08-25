@@ -33,6 +33,7 @@ public class Person {
 	@JsonView(PersonViews.Phone.class)
 	private String phone;
 
+	@JsonView(PersonViews.Mail.class)
 	private String email;
 
 	@Id

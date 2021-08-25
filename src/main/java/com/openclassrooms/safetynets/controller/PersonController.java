@@ -31,17 +31,21 @@ public class PersonController {
 	private PersonRepo personRepo;
 
 	@GetMapping(value = "person")
-	public List<Person> listePersonne() { return personRepo.findAll(); }
+	public List<Person> listePersonne() {
+		return personRepo.findAll();
+	}
 
 	@GetMapping(value = "person/{id}")
-	public Person afficherUnePersonne(@PathVariable int id){return personRepo.findById(id);}
+	public Person afficherUnePersonne(@PathVariable int id) {
+		return personRepo.findById(id);
+	}
 
 	@PostMapping(value = "person")
-	public ResponseEntity<Void> addPerson(@RequestBody Person person){
+	public ResponseEntity<Void> addPerson(@RequestBody Person person) {
 
 		Person person1 = personRepo.save(person);
 
-		if (person == null){
+		if (person == null) {
 			return ResponseEntity.noContent().build();
 		}
 
@@ -55,7 +59,9 @@ public class PersonController {
 	}
 
 	@DeleteMapping(value = "person/{id}")
-	public void deletePerson(@PathVariable long id){personRepo.deleteById(id);}
+	public void deletePerson(@PathVariable long id) {
+		personRepo.deleteById(id);
+	}
 
 
 	@PutMapping(value = "/person/{id}")
@@ -77,7 +83,7 @@ public class PersonController {
 
 	@JsonView({PersonViews.Normal.class})
 	@GetMapping(value = "/childAlert")
-	public PersonDTO listChildAtAnAddress(@RequestParam(value = "address")String address){
+	public PersonDTO listChildAtAnAddress(@RequestParam(value = "address") String address) {
 
 		LocalDate dateNow = LocalDate.now();
 		dateNow = dateNow.minusYears(18);
@@ -101,7 +107,7 @@ public class PersonController {
 
 	@JsonView({PersonViews.Normal.class})
 	@GetMapping(value = "/fire")
-	public PersonDTO listPeopleAtAStation(@RequestParam(value = "address")String address){
+	public PersonDTO listPeopleAtAStation(@RequestParam(value = "address") String address) {
 
 		List<Person> persons = personRepo.findPersonAtAnAddress(address);
 		List<Firestation> firestations = personRepo.findFirestationsByAddress(address);
@@ -115,4 +121,17 @@ public class PersonController {
 
 	}
 
+	@JsonView({PersonViews.Mail.class})
+	@GetMapping(value = "/communityEmail")
+	public PersonDTO listPeopleAtACity(@RequestParam(value = "city") String city) {
+
+		List<Person> persons = personRepo.findAllByCity(city);
+
+		PersonDTO listPerson = new PersonDTO();
+
+		listPerson.setEmails(persons);
+
+		return listPerson;
+
+	}
 }

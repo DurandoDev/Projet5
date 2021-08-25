@@ -26,4 +26,7 @@ public class PersonDTO {
 	@JsonView(PersonViews.Normal.class)
 	List<Firestation> firestations;
 
+	@JsonView(PersonViews.Mail.class)
+	List<Person> emails;
+
 }

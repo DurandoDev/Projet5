@@ -14,4 +14,8 @@ public class PersonViews {
 
 	}
 
+	public interface Mail{
+
+	}
+
 }

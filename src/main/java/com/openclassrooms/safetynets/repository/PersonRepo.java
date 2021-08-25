@@ -41,4 +41,7 @@ public interface PersonRepo extends JpaRepository<Person, Long> {
 	@Query(value = "SELECT f FROM Firestation f INNER JOIN Person p ON f.address = p.address WHERE p.address= ?1")
 	List<Firestation> findFirestationsByAddress(String address);
 
+	@Query(value = "SELECT p FROM Person p WHERE p.city = ?1")
+	List<Person> findAllByCity(String city);
+
 }
