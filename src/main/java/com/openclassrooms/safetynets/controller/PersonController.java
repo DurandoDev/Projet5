@@ -1,9 +1,6 @@
 package com.openclassrooms.safetynets.controller;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import com.fasterxml.jackson.databind.ser.FilterProvider;
-import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
-import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import com.openclassrooms.safetynets.dto.PersonDTO;
 import com.openclassrooms.safetynets.model.Firestation;
 import com.openclassrooms.safetynets.model.Person;
@@ -19,7 +16,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -94,7 +90,7 @@ public class PersonController {
 
 		List<Person> personList = personRepo.findPersonUnder18YearsAtAnAddress(address, date);
 
-		List<Person> nbPersons = personRepo.findPersonAtAnAddress(address);
+		List<Person> nbPersons = personRepo.findPersonOver18YearsAtAnAddress(address, date);
 
 		PersonDTO listPerson = new PersonDTO();
 
@@ -105,7 +101,7 @@ public class PersonController {
 
 	}
 
-	@JsonView({PersonViews.Normal.class})
+	@JsonView({PersonViews.NormalPhone.class})
 	@GetMapping(value = "/fire")
 	public PersonDTO listPeopleAtAStation(@RequestParam(value = "address") String address) {
 

@@ -6,8 +6,6 @@ import com.openclassrooms.safetynets.model.Person;
 import com.openclassrooms.safetynets.model.PersonViews;
 import lombok.Data;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 @Data

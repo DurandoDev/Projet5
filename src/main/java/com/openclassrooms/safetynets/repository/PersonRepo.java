@@ -22,6 +22,10 @@ public interface PersonRepo extends JpaRepository<Person, Long> {
 			"WHERE p.address = ?1 AND m.birthdate > ?2 ")
 	List<Person> findPersonUnder18YearsAtAnAddress(String address, Date birthdate);
 
+	@Query(value = "SELECT p FROM Person p INNER JOIN Medicalrecords m ON p.firstName = m.firstname AND p.lastName = m.lastname " +
+			"WHERE p.address = ?1 AND m.birthdate < ?2 ")
+	List<Person> findPersonOver18YearsAtAnAddress(String address, Date birthdate);
+
 	@Query(value = "SELECT p FROM Person p WHERE p.address = ?1")
 	List<Person> findPersonAtAnAddress(String address);
 
