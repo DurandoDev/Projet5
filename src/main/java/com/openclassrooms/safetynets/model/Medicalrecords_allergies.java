@@ -16,4 +16,6 @@ public class Medicalrecords_allergies {
 	//TODO
 	private int medicalrecords_id;
 
+	String allergies;
+
 }

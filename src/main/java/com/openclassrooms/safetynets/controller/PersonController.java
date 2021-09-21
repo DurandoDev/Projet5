@@ -1,10 +1,10 @@
 package com.openclassrooms.safetynets.controller;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import com.openclassrooms.safetynets.dto.AddressDTO;
 import com.openclassrooms.safetynets.dto.PersonDTO;
-import com.openclassrooms.safetynets.model.Firestation;
-import com.openclassrooms.safetynets.model.Person;
-import com.openclassrooms.safetynets.model.PersonViews;
+import com.openclassrooms.safetynets.dto.PersonWithAllergiesDTO;
+import com.openclassrooms.safetynets.model.*;
 import com.openclassrooms.safetynets.repository.PersonRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,7 +15,9 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.time.LocalDate;
+import java.time.Period;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -101,19 +103,35 @@ public class PersonController {
 
 	}
 
-	@JsonView({PersonViews.NormalPhone.class})
 	@GetMapping(value = "/fire")
-	public PersonDTO listPeopleAtAStation(@RequestParam(value = "address") String address) {
+	public AddressDTO listPeopleAtAStation(@RequestParam(value = "address") String address) {
 
 		List<Person> persons = personRepo.findPersonAtAnAddress(address);
 		List<Firestation> firestations = personRepo.findFirestationsByAddress(address);
+		List<PersonWithAllergiesDTO> allergies =new ArrayList<>();
 
-		PersonDTO listPerson = new PersonDTO();
+		for (Person p: persons) {
+			List<Medicalrecords_allergies> mAllergies = personRepo.findAllergies(p.getId());
+			Medicalrecords medicalrecord = personRepo.findPersonsMedicalRecord(p.getId());
 
-		listPerson.setPersons(persons);
-		listPerson.setFirestations(firestations);
+			int age = Period.between(medicalrecord.getBirthdate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(), LocalDate.now()).getYears();
 
-		return listPerson;
+			PersonWithAllergiesDTO allergiesDTO = new PersonWithAllergiesDTO();
+			allergiesDTO.setAllergies(mAllergies);
+			allergiesDTO.setName(p.getFirstName() + " " + p.getLastName());
+			allergiesDTO.setPhoneNum(p.getPhone());
+			allergiesDTO.setAge(age);
+
+			allergies.add(allergiesDTO);
+		}
+
+		AddressDTO dto = new AddressDTO();
+
+		dto.setAddress(address);
+		dto.setFirestationNumber(firestations.get(0).getStation());
+		dto.setPersons(allergies);
+
+		return dto;
 
 	}
 

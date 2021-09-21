@@ -15,6 +15,8 @@ public class FirestationDTO {
 	@JsonView(PersonViews.Normal.class)
 	Integer nbChildren;
 
+	String address;
+
 	@JsonView(PersonViews.Normal.class)
 	List<Person> persons;
 

@@ -4,10 +4,10 @@ import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.ser.FilterProvider;
 import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
+import com.openclassrooms.safetynets.dto.AddressDTO;
 import com.openclassrooms.safetynets.dto.FirestationDTO;
-import com.openclassrooms.safetynets.model.Firestation;
-import com.openclassrooms.safetynets.model.Person;
-import com.openclassrooms.safetynets.model.PersonViews;
+import com.openclassrooms.safetynets.dto.PersonWithAllergiesDTO;
+import com.openclassrooms.safetynets.model.*;
 import com.openclassrooms.safetynets.repository.FireStationRepo;
 import com.openclassrooms.safetynets.repository.PersonRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +18,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -102,6 +106,50 @@ public class FirestationController {
 		listPhones.setPhones(phones);
 
 		return listPhones;
+
+	}
+
+//	@JsonView({PersonViews.NormalPhone.class})
+	@GetMapping(value = "/flood")
+	public List<AddressDTO> listPeopleAtAStation(@RequestParam(value = "station")Integer station) {
+
+		List<AddressDTO> listAddress = new ArrayList<>();
+
+		List<String> address = personRepo.findAddressByStation(station);
+
+		FirestationDTO listPeople = new FirestationDTO();
+
+
+		List<PersonWithAllergiesDTO> allergies = null;
+		for (String a : address) {
+
+			AddressDTO dto = new AddressDTO();
+			List<Person> persons = personRepo.findPersonAtAnAddress(a);
+
+			allergies = new ArrayList<>();
+
+			for (Person p : persons) {
+				List<Medicalrecords_allergies> mAllergies = personRepo.findAllergies(p.getId());
+				Medicalrecords medicalrecord = personRepo.findPersonsMedicalRecord(p.getId());
+
+				int age = Period.between(medicalrecord.getBirthdate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(), LocalDate.now()).getYears();
+
+				PersonWithAllergiesDTO allergiesDTO = new PersonWithAllergiesDTO();
+				allergiesDTO.setAllergies(mAllergies);
+				allergiesDTO.setName(p.getFirstName() + " " + p.getLastName());
+				allergiesDTO.setPhoneNum(p.getPhone());
+				allergiesDTO.setAge(age);
+
+				allergies.add(allergiesDTO);
+			}
+
+			dto.setPersons(allergies);
+			dto.setAddress(a);
+			dto.setFirestationNumber(station);
+			listAddress.add(dto);
+		}
+
+		return listAddress;
 
 	}
 
