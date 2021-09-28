@@ -109,7 +109,6 @@ public class FirestationController {
 
 	}
 
-//	@JsonView({PersonViews.NormalPhone.class})
 	@GetMapping(value = "/flood")
 	public List<AddressDTO> listPeopleAtAStation(@RequestParam(value = "station")Integer station) {
 

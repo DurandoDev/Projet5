@@ -58,4 +58,7 @@ public interface PersonRepo extends JpaRepository<Person, Long> {
 
 	@Query(value = "SELECT f.address FROM Firestation f WHERE f.station = ?1")
 	List<String> findAddressByStation(Integer station);
+
+	@Query(value = "SELECT p FROM Person p WHERE p.lastName = ?1")
+	List<Person> findAllByLastName(String lastName);
 }

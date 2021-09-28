@@ -17,10 +17,7 @@ import java.net.URI;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @RestController
 public class PersonController {
@@ -108,6 +105,7 @@ public class PersonController {
 
 		List<Person> persons = personRepo.findPersonAtAnAddress(address);
 		List<Firestation> firestations = personRepo.findFirestationsByAddress(address);
+
 		List<PersonWithAllergiesDTO> allergies =new ArrayList<>();
 
 		for (Person p: persons) {
@@ -132,6 +130,39 @@ public class PersonController {
 		dto.setPersons(allergies);
 
 		return dto;
+
+	}
+
+	@GetMapping(value = "/personInfo")
+	public AddressDTO searchByName(@RequestParam Map<String,String> requestParams) {
+		String firstName = requestParams.get("firstName");
+		String lastName = requestParams.get("lastName");
+
+		List<Person> personList = personRepo.findAllByLastName(lastName);
+
+		List<PersonWithAllergiesDTO> allergies =new ArrayList<>();
+
+		for (Person p: personList) {
+			List<Medicalrecords_allergies> mAllergies = personRepo.findAllergies(p.getId());
+			Medicalrecords medicalrecord = personRepo.findPersonsMedicalRecord(p.getId());
+
+			int age = Period.between(medicalrecord.getBirthdate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(), LocalDate.now()).getYears();
+
+			PersonWithAllergiesDTO allergiesDTO = new PersonWithAllergiesDTO();
+			allergiesDTO.setAllergies(mAllergies);
+			allergiesDTO.setName(p.getFirstName() + " " + p.getLastName());
+			allergiesDTO.setPhoneNum(p.getPhone());
+			allergiesDTO.setAge(age);
+
+			allergies.add(allergiesDTO);
+		}
+
+		AddressDTO dto = new AddressDTO();
+
+		dto.setPersons(allergies);
+
+		return dto;
+
 
 	}
 
