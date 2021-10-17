@@ -155,3 +155,5 @@ INSERT INTO medicalrecords_medications (medicalrecords_id, medications) VALUES
 (21,'pharmacol:2500mg'),
 (22,''),
 (23,'tradoxidine:400mg');
+
+COMMIT;

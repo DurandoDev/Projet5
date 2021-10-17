@@ -1,6 +1,6 @@
 package com.openclassrooms.safetynets.dto;
 
-import com.openclassrooms.safetynets.model.Medicalrecords_allergies;
+import com.openclassrooms.safetynets.model.MedicalrecordsAllergies;
 import lombok.Data;
 
 import java.util.List;
@@ -14,5 +14,5 @@ public class PersonWithAllergiesDTO {
 
 	Integer age;
 
-	List<Medicalrecords_allergies> allergies;
+	List<MedicalrecordsAllergies> allergies;
 }

@@ -8,7 +8,7 @@ import javax.persistence.Id;
 
 @Data
 @Entity
-public class Medicalrecords_allergies {
+public class MedicalrecordsAllergies {
 	@Id
 	@GeneratedValue
 	private Long id;

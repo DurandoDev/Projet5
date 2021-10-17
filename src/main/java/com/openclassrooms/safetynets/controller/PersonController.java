@@ -9,11 +9,8 @@ import com.openclassrooms.safetynets.repository.PersonRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.net.URI;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.ZoneId;
@@ -36,7 +33,7 @@ public class PersonController {
 	}
 
 	@PostMapping(value = "person")
-	public ResponseEntity<Void> addPerson(@RequestBody Person person) {
+	public ResponseEntity<Person> addPerson(@RequestBody Person person) {
 
 		Person person1 = personRepo.save(person);
 
@@ -44,13 +41,13 @@ public class PersonController {
 			return ResponseEntity.noContent().build();
 		}
 
-		URI location = ServletUriComponentsBuilder
-				.fromCurrentRequest()
-				.path("/{id}")
-				.buildAndExpand(person1.getId())
-				.toUri();
+//		URI location = ServletUriComponentsBuilder
+//				.fromCurrentRequest()
+//				.path("/{id}")
+//				.buildAndExpand(person1.getId())
+//				.toUri();
 
-		return ResponseEntity.created(location).build();
+		return ResponseEntity.ok(person1);
 	}
 
 	@DeleteMapping(value = "person/{id}")
@@ -109,7 +106,7 @@ public class PersonController {
 		List<PersonWithAllergiesDTO> allergies =new ArrayList<>();
 
 		for (Person p: persons) {
-			List<Medicalrecords_allergies> mAllergies = personRepo.findAllergies(p.getId());
+			List<MedicalrecordsAllergies> mAllergies = personRepo.findAllergies(p.getId());
 			Medicalrecords medicalrecord = personRepo.findPersonsMedicalRecord(p.getId());
 
 			int age = Period.between(medicalrecord.getBirthdate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(), LocalDate.now()).getYears();
@@ -143,7 +140,7 @@ public class PersonController {
 		List<PersonWithAllergiesDTO> allergies =new ArrayList<>();
 
 		for (Person p: personList) {
-			List<Medicalrecords_allergies> mAllergies = personRepo.findAllergies(p.getId());
+			List<MedicalrecordsAllergies> mAllergies = personRepo.findAllergies(p.getId());
 			Medicalrecords medicalrecord = personRepo.findPersonsMedicalRecord(p.getId());
 
 			int age = Period.between(medicalrecord.getBirthdate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(), LocalDate.now()).getYears();

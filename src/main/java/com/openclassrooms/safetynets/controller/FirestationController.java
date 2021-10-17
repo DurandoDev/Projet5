@@ -1,9 +1,6 @@
 package com.openclassrooms.safetynets.controller;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import com.fasterxml.jackson.databind.ser.FilterProvider;
-import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
-import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import com.openclassrooms.safetynets.dto.AddressDTO;
 import com.openclassrooms.safetynets.dto.FirestationDTO;
 import com.openclassrooms.safetynets.dto.PersonWithAllergiesDTO;
@@ -13,7 +10,6 @@ import com.openclassrooms.safetynets.repository.PersonRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -34,7 +30,7 @@ public class FirestationController {
 	@Autowired
 	private PersonRepo personRepo;
 
-	@GetMapping(value = "firestation")
+	@GetMapping(value = "firestations")
 	public List<Firestation> listeFirestation() { return fireStationRepo.findAll(); }
 
 	@GetMapping(value = "firestation/{id}")
@@ -76,22 +72,22 @@ public class FirestationController {
 	}
 
 	@JsonView({PersonViews.NormalPhone.class})
-	@GetMapping(value = "/firestationPeople")
+	@GetMapping(value = "/firestation")
 	public FirestationDTO listAllAtAStation(@RequestParam(value = "station")Integer station){
 
-		List<Person> persons = fireStationRepo.findAllAtAStation(station);
+			List<Person> persons = fireStationRepo.findAllAtAStation(station);
 
-		List<Person> children = personRepo.findPersonUnder18YearsByFirestation(station);
+			List<Person> children = personRepo.findPersonUnder18YearsByFirestation(station);
 
-		List<Person> adults = personRepo.findPersonOver18YearsByFirestation(station);
+			List<Person> adults = personRepo.findPersonOver18YearsByFirestation(station);
 
-		FirestationDTO listPerson = new FirestationDTO();
+			FirestationDTO listPerson = new FirestationDTO();
 
-		listPerson.setPersons(persons);
-		listPerson.setNbChildren(children.size());
-		listPerson.setNbAdults(adults.size());
+			listPerson.setPersons(persons);
+			listPerson.setNbChildren(children.size());
+			listPerson.setNbAdults(adults.size());
 
-		return listPerson;
+			return listPerson;
 
 	}
 
@@ -128,7 +124,7 @@ public class FirestationController {
 			allergies = new ArrayList<>();
 
 			for (Person p : persons) {
-				List<Medicalrecords_allergies> mAllergies = personRepo.findAllergies(p.getId());
+				List<MedicalrecordsAllergies> mAllergies = personRepo.findAllergies(p.getId());
 				Medicalrecords medicalrecord = personRepo.findPersonsMedicalRecord(p.getId());
 
 				int age = Period.between(medicalrecord.getBirthdate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(), LocalDate.now()).getYears();
