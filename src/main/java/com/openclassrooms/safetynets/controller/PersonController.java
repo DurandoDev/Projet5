@@ -6,6 +6,7 @@ import com.openclassrooms.safetynets.dto.PersonDTO;
 import com.openclassrooms.safetynets.dto.PersonWithAllergiesDTO;
 import com.openclassrooms.safetynets.model.*;
 import com.openclassrooms.safetynets.repository.PersonRepo;
+import com.openclassrooms.safetynets.services.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -37,16 +38,6 @@ public class PersonController {
 
 		Person person1 = personRepo.save(person);
 
-		if (person == null) {
-			return ResponseEntity.noContent().build();
-		}
-
-//		URI location = ServletUriComponentsBuilder
-//				.fromCurrentRequest()
-//				.path("/{id}")
-//				.buildAndExpand(person1.getId())
-//				.toUri();
-
 		return ResponseEntity.ok(person1);
 	}
 
@@ -77,89 +68,21 @@ public class PersonController {
 	@GetMapping(value = "/childAlert")
 	public PersonDTO listChildAtAnAddress(@RequestParam(value = "address") String address) {
 
-		LocalDate dateNow = LocalDate.now();
-		dateNow = dateNow.minusYears(18);
-
-		ZoneId defaultZoneId = ZoneId.systemDefault();
-
-		Date date = Date.from(dateNow.atStartOfDay(defaultZoneId).toInstant());
-
-		List<Person> personList = personRepo.findPersonUnder18YearsAtAnAddress(address, date);
-
-		List<Person> nbPersons = personRepo.findPersonOver18YearsAtAnAddress(address, date);
-
-		PersonDTO listPerson = new PersonDTO();
-
-		listPerson.setChildren(personList);
-		listPerson.setPersons(nbPersons);
-
-		return listPerson;
+		return PersonService.listChildAtAnAddressService(personRepo, address);
 
 	}
 
 	@GetMapping(value = "/fire")
 	public AddressDTO listPeopleAtAStation(@RequestParam(value = "address") String address) {
 
-		List<Person> persons = personRepo.findPersonAtAnAddress(address);
-		List<Firestation> firestations = personRepo.findFirestationsByAddress(address);
-
-		List<PersonWithAllergiesDTO> allergies =new ArrayList<>();
-
-		for (Person p: persons) {
-			List<MedicalrecordsAllergies> mAllergies = personRepo.findAllergies(p.getId());
-			Medicalrecords medicalrecord = personRepo.findPersonsMedicalRecord(p.getId());
-
-			int age = Period.between(medicalrecord.getBirthdate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(), LocalDate.now()).getYears();
-
-			PersonWithAllergiesDTO allergiesDTO = new PersonWithAllergiesDTO();
-			allergiesDTO.setAllergies(mAllergies);
-			allergiesDTO.setName(p.getFirstName() + " " + p.getLastName());
-			allergiesDTO.setPhoneNum(p.getPhone());
-			allergiesDTO.setAge(age);
-
-			allergies.add(allergiesDTO);
-		}
-
-		AddressDTO dto = new AddressDTO();
-
-		dto.setAddress(address);
-		dto.setFirestationNumber(firestations.get(0).getStation());
-		dto.setPersons(allergies);
-
-		return dto;
+		return PersonService.listPeopleAtAStationService(personRepo,address);
 
 	}
 
 	@GetMapping(value = "/personInfo")
 	public AddressDTO searchByName(@RequestParam Map<String,String> requestParams) {
-		String firstName = requestParams.get("firstName");
-		String lastName = requestParams.get("lastName");
 
-		List<Person> personList = personRepo.findAllByLastName(lastName);
-
-		List<PersonWithAllergiesDTO> allergies =new ArrayList<>();
-
-		for (Person p: personList) {
-			List<MedicalrecordsAllergies> mAllergies = personRepo.findAllergies(p.getId());
-			Medicalrecords medicalrecord = personRepo.findPersonsMedicalRecord(p.getId());
-
-			int age = Period.between(medicalrecord.getBirthdate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(), LocalDate.now()).getYears();
-
-			PersonWithAllergiesDTO allergiesDTO = new PersonWithAllergiesDTO();
-			allergiesDTO.setAllergies(mAllergies);
-			allergiesDTO.setName(p.getFirstName() + " " + p.getLastName());
-			allergiesDTO.setPhoneNum(p.getPhone());
-			allergiesDTO.setAge(age);
-
-			allergies.add(allergiesDTO);
-		}
-
-		AddressDTO dto = new AddressDTO();
-
-		dto.setPersons(allergies);
-
-		return dto;
-
+		return PersonService.searchByNameService(personRepo, requestParams);
 
 	}
 

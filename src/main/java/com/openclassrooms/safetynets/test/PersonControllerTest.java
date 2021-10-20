@@ -16,6 +16,7 @@ import org.springframework.boot.test.context.TestComponent;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,8 +61,20 @@ public class PersonControllerTest {
 	}
 
 	@Test
-	public void testDeletePersonIT() throws Exception {
+	public void testDeletePerson() throws Exception {
 		mockMvc.perform(delete("/person/2"))
+				.andExpect(status().isOk());
+	}
+
+	@Test
+	public void testChildAlert() throws Exception {
+
+		String address = "947 E. Rose Dr";
+
+		mockMvc.perform(get("/childAlert")
+				.param("address",address)
+				.contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk());
 	}
 
@@ -83,10 +96,39 @@ public class PersonControllerTest {
 	@Test
 	public void testPostPersonIT() throws Exception {
 		mockMvc.perform(post("/person")
-				.content("{\"firstName\":\"Toto\",\"lastName\":\"Tutu\",\"address\":\"1509 Culver Treet\",\"city\":\"Culver\",\"zip\":\"97451\",\"phone\":\"841-874-6512\",\"email\":\"jaboyd@email.com\"}")
+				.content("{\"firstName\":\"Toto\",\"lastName\":\"Tutu\",\"address\":\"1509 Culver St\",\"city\":\"Culver\",\"zip\":\"97451\",\"phone\":\"841-874-6512\",\"email\":\"jaboyd@email.com\"}")
 				.contentType(MediaType.APPLICATION_JSON)
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk());
 	}
+
+	@Test
+	public void testUpdatePersonIT() throws Exception {
+		mockMvc.perform(put("/person/1")
+				.content("{\"address\":\"test\",\"city\":\"testCity\",\"zip\":\"11111\",\"phone\":\"001-001-0001\",\"email\":\"test@email.com\"}")
+				.contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk())
+				.andExpect(MockMvcResultMatchers.jsonPath("$.address").value("test"))
+				.andExpect(MockMvcResultMatchers.jsonPath("$.city").value("testCity"))
+				.andExpect(MockMvcResultMatchers.jsonPath("$.zip").value("11111"))
+				.andExpect(MockMvcResultMatchers.jsonPath("$.phone").value("001-001-0001"))
+				.andExpect(MockMvcResultMatchers.jsonPath("$.email").value("test@email.com"));
+
+	}
+
+	@Test
+	public void testChildAlertIT() throws Exception {
+		
+		String address = "947 E. Rose Dr";
+		
+		mockMvc.perform(get("/childAlert")
+				.param("address",address)
+				.contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk())
+				.andExpect(content().string(containsString("Kendrik")));
+	}
+
 
 }
