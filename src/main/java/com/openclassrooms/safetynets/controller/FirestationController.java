@@ -42,17 +42,11 @@ public class FirestationController {
 	}
 
 	@PostMapping(value = "firestation")
-	public ResponseEntity<Void> addFireStation(@RequestBody Firestation firestation) {
+	public ResponseEntity<Firestation> addFireStation(@RequestBody Firestation firestation) {
 
 		Firestation firestation1 = fireStationRepo.save(firestation);
 
-		URI location = ServletUriComponentsBuilder
-				.fromCurrentRequest()
-				.path("/{id}")
-				.buildAndExpand(firestation1.getId())
-				.toUri();
-
-		return ResponseEntity.created(location).build();
+		return ResponseEntity.ok(firestation1);
 	}
 
 	@DeleteMapping(value = "firestation/{id}")
