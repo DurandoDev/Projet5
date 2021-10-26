@@ -12,6 +12,10 @@ public class PersonWithAllergiesDTO {
 
 	String phoneNum;
 
+	String address;
+
+	String email;
+
 	Integer age;
 
 	List<MedicalrecordsAllergies> allergies;

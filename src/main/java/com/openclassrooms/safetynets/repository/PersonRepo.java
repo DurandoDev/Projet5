@@ -29,6 +29,12 @@ public interface PersonRepo extends JpaRepository<Person, Long> {
 	@Query(value = "SELECT p FROM Person p WHERE p.address = ?1")
 	List<Person> findPersonAtAnAddress(String address);
 
+	@Query(value = "SELECT p.address FROM Person p WHERE p.lastName = ?1 AND p.firstName = ?2")
+	String findAddressOfAPerson(String lastName, String firstName);
+
+	@Query(value = "SELECT p.email FROM Person p WHERE p.lastName = ?1 AND p.firstName = ?2")
+	String findMailOfAPerson(String lastName, String firstName);
+
 	@Query(value = "SELECT p FROM Person p INNER JOIN Medicalrecords m ON p.firstName = m.firstname AND p.lastName = m.lastname " +
 			"INNER JOIN Firestation f ON p.address = f.address " +
 			"WHERE f.id= ?1 AND m.birthdate > '2003-07-27'")

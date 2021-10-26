@@ -83,11 +83,16 @@ public class PersonService {
 
 			int age = Period.between(medicalrecord.getBirthdate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(), LocalDate.now()).getYears();
 
+			String address = personRepo.findAddressOfAPerson(p.getLastName(), p.getFirstName());
+			String email = personRepo.findMailOfAPerson(p.getLastName(), p.getFirstName());
+
 			PersonWithAllergiesDTO allergiesDTO = new PersonWithAllergiesDTO();
 			allergiesDTO.setAllergies(mAllergies);
 			allergiesDTO.setName(p.getFirstName() + " " + p.getLastName());
 			allergiesDTO.setPhoneNum(p.getPhone());
 			allergiesDTO.setAge(age);
+			allergiesDTO.setAddress(address);
+			allergiesDTO.setEmail(email);
 
 			allergies.add(allergiesDTO);
 		}
