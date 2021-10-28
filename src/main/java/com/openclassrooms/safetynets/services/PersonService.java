@@ -56,6 +56,8 @@ public class PersonService {
 			allergiesDTO.setName(p.getFirstName() + " " + p.getLastName());
 			allergiesDTO.setPhoneNum(p.getPhone());
 			allergiesDTO.setAge(age);
+			allergiesDTO.setEmail(p.getEmail());
+			allergiesDTO.setAddress(p.getAddress());
 
 			allergies.add(allergiesDTO);
 		}

@@ -1,5 +1,6 @@
 package com.openclassrooms.safetynets.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.Hibernate;
 
@@ -16,8 +17,10 @@ import java.util.Objects;
 public class MedicalrecordsAllergies {
 	@Id
 	@GeneratedValue
+	@JsonIgnore
 	private Long id;
 
+	@JsonIgnore
 	private int medicalrecords_id;
 
 	String allergies;
