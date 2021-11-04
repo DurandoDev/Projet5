@@ -168,8 +168,22 @@ public class PersonControllerTest {
 						.contentType(MediaType.APPLICATION_JSON)
 						.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.persons[0].phoneNum").value("841-874-6512"))
+				.andExpect(jsonPath("$.persons[0].phoneNum").exists())
 				.andExpect(jsonPath("$.persons[1].address").value("1509 Culver St"))
 				.andExpect(jsonPath("$.persons[2].email").value("tenz@email.com"));
+	}
+
+	@Test
+	public void testcommunityEmailIT() throws Exception {
+
+		String city = "Culver";
+
+		mockMvc.perform(get("/communityEmail")
+						.param("city",city)
+						.contentType(MediaType.APPLICATION_JSON)
+						.accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk())
+				.andExpect(content().string(containsString("ward@email.com")))
+				.andExpect(jsonPath("$.emails").exists());
 	}
 }

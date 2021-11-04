@@ -1,5 +1,6 @@
 package com.openclassrooms.safetynets.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
 import lombok.Data;
 
@@ -18,6 +19,7 @@ public class Firestation {
 	private Integer station;
 
 	@Id
-	@GeneratedValue (strategy= GenerationType.AUTO)
-	private int id;
+	@GeneratedValue (strategy= GenerationType.IDENTITY)
+	@JsonIgnore
+	private long id;
 }

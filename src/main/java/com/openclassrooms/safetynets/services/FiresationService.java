@@ -43,6 +43,8 @@ public class FiresationService {
 				allergiesDTO.setName(p.getFirstName() + " " + p.getLastName());
 				allergiesDTO.setPhoneNum(p.getPhone());
 				allergiesDTO.setAge(age);
+				allergiesDTO.setAddress(p.getAddress());
+				allergiesDTO.setEmail(p.getEmail());
 
 				allergies.add(allergiesDTO);
 			}

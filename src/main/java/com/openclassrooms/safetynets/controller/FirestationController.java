@@ -37,8 +37,8 @@ public class FirestationController {
 	}
 
 	@GetMapping(value = "firestation/{id}")
-	public Firestation afficherUneFireStation(@PathVariable int id) {
-		return fireStationRepo.findById(id);
+	public Firestation afficherUneFireStation(@PathVariable long id) {
+		return fireStationRepo.findById(id).get();
 	}
 
 	@PostMapping(value = "firestation")
@@ -50,13 +50,11 @@ public class FirestationController {
 	}
 
 	@DeleteMapping(value = "firestation/{id}")
-	public void deleteFirestation(@PathVariable long id) {
-		fireStationRepo.deleteById(id);
-	}
+	public void deleteFirestation(@PathVariable long id) {fireStationRepo.deleteById(id);}
 
 	@PutMapping(value = "/firestation/{id}")
 	public ResponseEntity<Firestation> updateFirestation(@PathVariable("id") long id, @RequestBody Firestation firestation) {
-		Optional<Firestation> firestationData = Optional.ofNullable(fireStationRepo.findById(id));
+		Optional<Firestation> firestationData = fireStationRepo.findById(id);
 
 		if (firestationData.isPresent()) {
 			Firestation firestation1 = firestationData.get();
@@ -90,7 +88,7 @@ public class FirestationController {
 
 	@JsonView(PersonViews.Phone.class)
 	@GetMapping(value = "/phoneAlert")
-	public FirestationDTO listPhoneAtAStation(@RequestParam(value = "station") Integer station) {
+	public FirestationDTO listPhoneAtAStation(@RequestParam(value = "firestation") Integer station) {
 
 		List<Person> phones = fireStationRepo.findPhoneAtAStation(station);
 
