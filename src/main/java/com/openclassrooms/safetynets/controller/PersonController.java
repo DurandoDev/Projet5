@@ -3,7 +3,6 @@ package com.openclassrooms.safetynets.controller;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.openclassrooms.safetynets.dto.AddressDTO;
 import com.openclassrooms.safetynets.dto.PersonDTO;
-import com.openclassrooms.safetynets.dto.PersonWithAllergiesDTO;
 import com.openclassrooms.safetynets.model.*;
 import com.openclassrooms.safetynets.repository.PersonRepo;
 import com.openclassrooms.safetynets.services.PersonService;
@@ -12,9 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
-import java.time.Period;
-import java.time.ZoneId;
 import java.util.*;
 
 @RestController

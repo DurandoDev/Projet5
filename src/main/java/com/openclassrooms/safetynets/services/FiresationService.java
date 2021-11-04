@@ -23,7 +23,6 @@ public class FiresationService {
 
 		FirestationDTO listPeople = new FirestationDTO();
 
-
 		List<PersonWithAllergiesDTO> allergies;
 		for (String a : address) {
 

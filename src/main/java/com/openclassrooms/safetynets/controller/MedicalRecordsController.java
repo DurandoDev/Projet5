@@ -1,7 +1,6 @@
 package com.openclassrooms.safetynets.controller;
 
 import com.openclassrooms.safetynets.model.Medicalrecords;
-import com.openclassrooms.safetynets.model.Person;
 import com.openclassrooms.safetynets.repository.MedicalRecordsRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
