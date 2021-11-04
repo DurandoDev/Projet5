@@ -38,12 +38,12 @@ public interface PersonRepo extends JpaRepository<Person, Long> {
 	@Query(value = "SELECT p FROM Person p INNER JOIN Medicalrecords m ON p.firstName = m.firstname AND p.lastName = m.lastname " +
 			"INNER JOIN Firestation f ON p.address = f.address " +
 			"WHERE f.id= ?1 AND m.birthdate > '2003-07-27'")
-	List<Person> findPersonUnder18YearsByFirestation(Integer firestationId);
+	List<Person> findPersonUnder18YearsByFirestation(Long firestationId);
 
 	@Query(value = "SELECT p FROM Person p INNER JOIN Medicalrecords m ON p.firstName = m.firstname AND p.lastName = m.lastname " +
 			"INNER JOIN Firestation f ON p.address = f.address " +
 			"WHERE f.id= ?1 AND m.birthdate < '2003-07-27'")
-	List<Person> findPersonOver18YearsByFirestation(Integer firestationId);
+	List<Person> findPersonOver18YearsByFirestation(Long firestationId);
 
 	@Query(value = "SELECT f FROM Firestation f WHERE f.address= ?1")
 	List<Firestation> findFirestationsByAddress(String address);
@@ -58,7 +58,7 @@ public interface PersonRepo extends JpaRepository<Person, Long> {
 	Medicalrecords findPersonsMedicalRecord(Long id);
 
 	@Query(value = "SELECT f.address FROM Firestation f WHERE f.station = ?1")
-	List<String> findAddressByStation(Integer station);
+	List<String> findAddressByStation(Long station);
 
 	@Query(value = "SELECT p FROM Person p WHERE p.lastName = ?1")
 	List<Person> findAllByLastName(String lastName);

@@ -61,7 +61,7 @@ public class FirestationController {
 
 	@JsonView({PersonViews.NormalPhone.class})
 	@GetMapping(value = "/firestation")
-	public FirestationDTO listAllAtAStation(@RequestParam(value = "station") Integer station) {
+	public FirestationDTO listAllAtAStation(@RequestParam(value = "stationNumber") Long station) {
 
 		List<Person> persons = fireStationRepo.findAllAtAStation(station);
 
@@ -81,7 +81,7 @@ public class FirestationController {
 
 	@JsonView(PersonViews.Phone.class)
 	@GetMapping(value = "/phoneAlert")
-	public FirestationDTO listPhoneAtAStation(@RequestParam(value = "firestation") Integer station) {
+	public FirestationDTO listPhoneAtAStation(@RequestParam(value = "firestation") Long station) {
 
 		List<Person> phones = fireStationRepo.findPhoneAtAStation(station);
 
@@ -94,7 +94,7 @@ public class FirestationController {
 	}
 
 	@GetMapping(value = "/flood")
-	public List<AddressDTO> listPeopleAtAStation(@RequestParam(value = "station") Integer station) {
+	public List<AddressDTO> listPeopleAtAStation(@RequestParam(value = "station") Long station) {
 
 		return FiresationService.listPeopleAtAStationService(personRepo, station);
 

@@ -16,7 +16,7 @@ public class Firestation {
 	private String address;
 
 	@JsonView(FirestationViews.Normal.class)
-	private Integer station;
+	private Long station;
 
 	@Id
 	@GeneratedValue (strategy= GenerationType.IDENTITY)

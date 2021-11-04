@@ -16,7 +16,7 @@ import java.util.List;
 
 public class FiresationService {
 
-	public static List<AddressDTO> listPeopleAtAStationService(PersonRepo personRepo, Integer station) {
+	public static List<AddressDTO> listPeopleAtAStationService(PersonRepo personRepo, Long station) {
 		List<AddressDTO> listAddress = new ArrayList<>();
 
 		List<String> address = personRepo.findAddressByStation(station);

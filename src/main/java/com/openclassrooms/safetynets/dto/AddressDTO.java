@@ -9,7 +9,7 @@ public class AddressDTO {
 
 	String address;
 
-	Integer firestationNumber;
+	Long firestationNumber;
 
 	List<PersonWithAllergiesDTO> persons;
 }

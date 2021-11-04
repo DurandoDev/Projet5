@@ -14,9 +14,9 @@ public interface FireStationRepo extends JpaRepository<Firestation, Long> {
 	Firestation save(Firestation firestation);
 
 	@Query(value = "SELECT p FROM Person p INNER JOIN Firestation f ON p.address = f.address WHERE f.station = ?1")
-	List<Person> findAllAtAStation(Integer station);
+	List<Person> findAllAtAStation(Long station);
 
 	@Query(value = "SELECT p FROM Person p INNER JOIN Firestation f ON p.address = f.address WHERE f.station = ?1")
-	List<Person> findPhoneAtAStation(Integer station);
+	List<Person> findPhoneAtAStation(Long station);
 
 }
