@@ -99,5 +99,20 @@ public class FirestationControllerTest {
 
 	}
 
+	@Test
+	public void testfirestationIT() throws Exception {
+
+		mockMvc.perform(get("/firestation")
+						.param("stationNumber","4")
+						.contentType(MediaType.APPLICATION_JSON)
+						.accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk())
+				.andExpect(MockMvcResultMatchers.jsonPath("$.persons[0].firstName").value("Lily"))
+				.andExpect(MockMvcResultMatchers.jsonPath("$.persons[1].lastName").value("Cooper"))
+				.andExpect(MockMvcResultMatchers.jsonPath("$.persons[2].address").value("112 Steppes Pl"))
+				.andExpect(MockMvcResultMatchers.jsonPath("$.persons[3].phone").value("841-874-9888"));
+
+	}
+
 
 }

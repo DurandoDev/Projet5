@@ -37,12 +37,12 @@ public interface PersonRepo extends JpaRepository<Person, Long> {
 
 	@Query(value = "SELECT p FROM Person p INNER JOIN Medicalrecords m ON p.firstName = m.firstname AND p.lastName = m.lastname " +
 			"INNER JOIN Firestation f ON p.address = f.address " +
-			"WHERE f.id= ?1 AND m.birthdate > '2003-07-27'")
+			"WHERE f.station= ?1 AND m.birthdate > '2003-07-27'")
 	List<Person> findPersonUnder18YearsByFirestation(Long firestationId);
 
 	@Query(value = "SELECT p FROM Person p INNER JOIN Medicalrecords m ON p.firstName = m.firstname AND p.lastName = m.lastname " +
 			"INNER JOIN Firestation f ON p.address = f.address " +
-			"WHERE f.id= ?1 AND m.birthdate < '2003-07-27'")
+			"WHERE f.station= ?1 AND m.birthdate < '2003-07-27'")
 	List<Person> findPersonOver18YearsByFirestation(Long firestationId);
 
 	@Query(value = "SELECT f FROM Firestation f WHERE f.address= ?1")
