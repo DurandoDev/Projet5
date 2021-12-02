@@ -5,7 +5,6 @@ import com.openclassrooms.safetynets.dto.PersonDTO;
 import com.openclassrooms.safetynets.dto.PersonWithAllergiesDTO;
 import com.openclassrooms.safetynets.model.Firestation;
 import com.openclassrooms.safetynets.model.Medicalrecords;
-import com.openclassrooms.safetynets.model.MedicalrecordsAllergies;
 import com.openclassrooms.safetynets.model.Person;
 import com.openclassrooms.safetynets.repository.PersonRepo;
 
@@ -46,13 +45,13 @@ public class PersonService {
 		List<PersonWithAllergiesDTO> allergies =new ArrayList<>();
 
 		for (Person p: persons) {
-			List<MedicalrecordsAllergies> mAllergies = personRepo.findAllergies(p.getId());
 			Medicalrecords medicalrecord = personRepo.findPersonsMedicalRecord(p.getId());
 
 			int age = Period.between(medicalrecord.getBirthdate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(), LocalDate.now()).getYears();
 
 			PersonWithAllergiesDTO allergiesDTO = new PersonWithAllergiesDTO();
-			allergiesDTO.setAllergies(mAllergies);
+			allergiesDTO.setAllergies(medicalrecord.getAllergies());
+			allergiesDTO.setMedications(medicalrecord.getMedications());
 			allergiesDTO.setName(p.getFirstName() + " " + p.getLastName());
 			allergiesDTO.setPhoneNum(p.getPhone());
 			allergiesDTO.setAge(age);
@@ -80,7 +79,6 @@ public class PersonService {
 		List<PersonWithAllergiesDTO> allergies =new ArrayList<>();
 
 		for (Person p: personList) {
-			List<MedicalrecordsAllergies> mAllergies = personRepo.findAllergies(p.getId());
 			Medicalrecords medicalrecord = personRepo.findPersonsMedicalRecord(p.getId());
 
 			int age = Period.between(medicalrecord.getBirthdate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(), LocalDate.now()).getYears();
@@ -89,7 +87,8 @@ public class PersonService {
 			String email = personRepo.findMailOfAPerson(p.getLastName(), p.getFirstName());
 
 			PersonWithAllergiesDTO allergiesDTO = new PersonWithAllergiesDTO();
-			allergiesDTO.setAllergies(mAllergies);
+			allergiesDTO.setAllergies(medicalrecord.getAllergies());
+			allergiesDTO.setMedications(medicalrecord.getMedications());
 			allergiesDTO.setName(p.getFirstName() + " " + p.getLastName());
 			allergiesDTO.setPhoneNum(p.getPhone());
 			allergiesDTO.setAge(age);

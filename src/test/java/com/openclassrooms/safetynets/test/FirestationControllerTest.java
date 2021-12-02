@@ -94,7 +94,7 @@ public class FirestationControllerTest {
 				.andExpect(status().isOk())
 				.andExpect(MockMvcResultMatchers.jsonPath("$[0].persons[0].address").value("489 Manchester St"))
 				.andExpect(MockMvcResultMatchers.jsonPath("$[0].persons[0].age").value("27"))
-				.andExpect(MockMvcResultMatchers.jsonPath("$[1].persons[0].allergies[0].allergies").value("shellfish"))
+				.andExpect(MockMvcResultMatchers.jsonPath("$[1].persons[0].allergies[0]").value("shellfish"))
 				.andExpect(MockMvcResultMatchers.jsonPath("$[1].persons[2].email").value("aly@imail.com"));
 
 	}

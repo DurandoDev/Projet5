@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>FiresationService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">safetynets$All_in_safetynets.exec</a> &gt; <a href="index.source.html" class="el_package">com.openclassrooms.safetynets.services</a> &gt; <span class="el_source">FiresationService.java</span></div><h1>FiresationService.java</h1><pre class="source lang-java linenums">package com.openclassrooms.safetynets.services;
+
+import com.openclassrooms.safetynets.dto.AddressDTO;
+import com.openclassrooms.safetynets.dto.FirestationDTO;
+import com.openclassrooms.safetynets.dto.PersonWithAllergiesDTO;
+import com.openclassrooms.safetynets.model.Medicalrecords;
+import com.openclassrooms.safetynets.model.Person;
+import com.openclassrooms.safetynets.repository.PersonRepo;
+
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.List;
+
+<span class="nc" id="L16">public class FiresationService {</span>
+
+	public static List&lt;AddressDTO&gt; listPeopleAtAStationService(PersonRepo personRepo, Long station) {
+<span class="fc" id="L19">		List&lt;AddressDTO&gt; listAddress = new ArrayList&lt;&gt;();</span>
+
+<span class="fc" id="L21">		List&lt;String&gt; address = personRepo.findAddressByStation(station);</span>
+
+<span class="fc" id="L23">		FirestationDTO listPeople = new FirestationDTO();</span>
+
+		List&lt;PersonWithAllergiesDTO&gt; allergies;
+<span class="fc bfc" id="L26" title="All 2 branches covered.">		for (String a : address) {</span>
+
+<span class="fc" id="L28">			AddressDTO dto = new AddressDTO();</span>
+<span class="fc" id="L29">			List&lt;Person&gt; persons = personRepo.findPersonAtAnAddress(a);</span>
+
+<span class="fc" id="L31">			allergies = new ArrayList&lt;&gt;();</span>
+
+<span class="fc bfc" id="L33" title="All 2 branches covered.">			for (Person p : persons) {</span>
+<span class="fc" id="L34">				Medicalrecords medicalrecord = personRepo.findPersonsMedicalRecord(p.getId());</span>
+
+<span class="fc" id="L36">				int age = Period.between(medicalrecord.getBirthdate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(), LocalDate.now()).getYears();</span>
+
+<span class="fc" id="L38">				PersonWithAllergiesDTO allergiesDTO = new PersonWithAllergiesDTO();</span>
+<span class="fc" id="L39">				allergiesDTO.setAllergies(medicalrecord.getAllergies());</span>
+<span class="fc" id="L40">				allergiesDTO.setMedications(medicalrecord.getMedications());</span>
+<span class="fc" id="L41">				allergiesDTO.setName(p.getFirstName() + &quot; &quot; + p.getLastName());</span>
+<span class="fc" id="L42">				allergiesDTO.setPhoneNum(p.getPhone());</span>
+<span class="fc" id="L43">				allergiesDTO.setAge(age);</span>
+<span class="fc" id="L44">				allergiesDTO.setAddress(p.getAddress());</span>
+<span class="fc" id="L45">				allergiesDTO.setEmail(p.getEmail());</span>
+
+<span class="fc" id="L47">				allergies.add(allergiesDTO);</span>
+<span class="fc" id="L48">			}</span>
+
+<span class="fc" id="L50">			dto.setPersons(allergies);</span>
+<span class="fc" id="L51">			dto.setAddress(a);</span>
+<span class="fc" id="L52">			dto.setFirestationNumber(station);</span>
+<span class="fc" id="L53">			listAddress.add(dto);</span>
+<span class="fc" id="L54">		}</span>
+<span class="fc" id="L55">		return listAddress;</span>
+	}
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

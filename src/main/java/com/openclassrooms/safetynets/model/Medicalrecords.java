@@ -1,5 +1,6 @@
 package com.openclassrooms.safetynets.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -14,10 +15,11 @@ public class Medicalrecords {
 	@GeneratedValue
 	private long id;
 
-	private String firstname;
+	private String firstName;
 
-	private String lastname;
+	private String lastName;
 
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MM/dd/yyyy")
 	private Date birthdate;
 
 	@ElementCollection

@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>FirestationControllerTest.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">safetynets$All_in_safetynets.exec</a> &gt; <a href="index.source.html" class="el_package">com.openclassrooms.safetynets.test</a> &gt; <span class="el_source">FirestationControllerTest.java</span></div><h1>FirestationControllerTest.java</h1><pre class="source lang-java linenums">package com.openclassrooms.safetynets.test;
+
+
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+
+import static org.hamcrest.Matchers.containsString;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+@SpringBootTest
+@AutoConfigureMockMvc
+<span class="fc" id="L18">public class FirestationControllerTest {</span>
+
+	@Autowired
+	private MockMvc mockMvc;
+
+	//Tests Unitaires
+
+	@Test
+	public void testGetFirestations() throws Exception {
+<span class="fc" id="L27">		mockMvc.perform(get(&quot;/firestations&quot;))</span>
+<span class="fc" id="L28">				.andExpect(status().isOk());</span>
+<span class="fc" id="L29">	}</span>
+
+	@Test
+	public void testDeleteFirestation() throws Exception {
+<span class="fc" id="L33">		mockMvc.perform(delete(&quot;/firestation/2&quot;))</span>
+<span class="fc" id="L34">				.andExpect(status().isOk());</span>
+<span class="fc" id="L35">	}</span>
+
+	//Tests d'intégration
+
+	@Test
+	public void testGetFirestationsIT() throws Exception {
+<span class="fc" id="L41">		mockMvc.perform(get(&quot;/firestations&quot;))</span>
+<span class="fc" id="L42">				.andExpect(status().isOk())</span>
+<span class="fc" id="L43">				.andExpect(content().string(containsString(&quot;834 Binoc Ave&quot;)));</span>
+<span class="fc" id="L44">	}</span>
+
+	@Test
+	public void testGetFirestation1IT() throws Exception {
+<span class="fc" id="L48">		mockMvc.perform(get(&quot;/firestation/1&quot;))</span>
+<span class="fc" id="L49">				.andExpect(status().isOk())</span>
+<span class="fc" id="L50">				.andExpect(content().string(containsString(&quot;1509 Culver St&quot;)));</span>
+<span class="fc" id="L51">	}</span>
+
+	@Test
+	public void testPostFirestationIT() throws Exception {
+<span class="fc" id="L55">		mockMvc.perform(post(&quot;/firestation&quot;)</span>
+<span class="fc" id="L56">				.content(&quot;{\&quot;address\&quot;:\&quot;Test\&quot;,\&quot;station\&quot;:\&quot;10\&quot;}&quot;)</span>
+<span class="fc" id="L57">				.contentType(MediaType.APPLICATION_JSON)</span>
+<span class="fc" id="L58">				.accept(MediaType.APPLICATION_JSON))</span>
+<span class="fc" id="L59">				.andExpect(status().isOk())</span>
+<span class="fc" id="L60">				.andExpect(content().string(containsString(&quot;Test&quot;)));</span>
+<span class="fc" id="L61">	}</span>
+
+	@Test
+	public void testUpdateFirestationIT() throws Exception {
+<span class="fc" id="L65">		mockMvc.perform(put(&quot;/firestation/4&quot;)</span>
+<span class="fc" id="L66">						.content(&quot;{\&quot;address\&quot;:\&quot;Test\&quot;,\&quot;station\&quot;:\&quot;10\&quot;}&quot;)</span>
+<span class="fc" id="L67">						.contentType(MediaType.APPLICATION_JSON)</span>
+<span class="fc" id="L68">						.accept(MediaType.APPLICATION_JSON))</span>
+<span class="fc" id="L69">				.andExpect(status().isOk())</span>
+<span class="fc" id="L70">				.andExpect(MockMvcResultMatchers.jsonPath(&quot;$.station&quot;).value(&quot;10&quot;))</span>
+<span class="fc" id="L71">				.andExpect(MockMvcResultMatchers.jsonPath(&quot;$.address&quot;).value(&quot;Test&quot;));</span>
+<span class="fc" id="L72">	}</span>
+
+	@Test
+	public void testphoneAlerttIT() throws Exception {
+
+<span class="fc" id="L77">		mockMvc.perform(get(&quot;/phoneAlert&quot;)</span>
+<span class="fc" id="L78">						.param(&quot;firestation&quot;,&quot;4&quot;)</span>
+<span class="fc" id="L79">						.contentType(MediaType.APPLICATION_JSON)</span>
+<span class="fc" id="L80">						.accept(MediaType.APPLICATION_JSON))</span>
+<span class="fc" id="L81">				.andExpect(status().isOk())</span>
+<span class="fc" id="L82">				.andExpect(MockMvcResultMatchers.jsonPath(&quot;$.phones[0].phone&quot;).value(&quot;841-874-9845&quot;))</span>
+<span class="fc" id="L83">				.andExpect(MockMvcResultMatchers.jsonPath(&quot;$.phones[1].phone&quot;).value(&quot;841-874-6874&quot;));</span>
+
+<span class="fc" id="L85">	}</span>
+
+	@Test
+	public void testfloodIT() throws Exception {
+
+<span class="fc" id="L90">		mockMvc.perform(get(&quot;/flood&quot;)</span>
+<span class="fc" id="L91">						.param(&quot;station&quot;,&quot;4&quot;)</span>
+<span class="fc" id="L92">						.contentType(MediaType.APPLICATION_JSON)</span>
+<span class="fc" id="L93">						.accept(MediaType.APPLICATION_JSON))</span>
+<span class="fc" id="L94">				.andExpect(status().isOk())</span>
+<span class="fc" id="L95">				.andExpect(MockMvcResultMatchers.jsonPath(&quot;$[0].persons[0].address&quot;).value(&quot;489 Manchester St&quot;))</span>
+<span class="fc" id="L96">				.andExpect(MockMvcResultMatchers.jsonPath(&quot;$[0].persons[0].age&quot;).value(&quot;27&quot;))</span>
+<span class="fc" id="L97">				.andExpect(MockMvcResultMatchers.jsonPath(&quot;$[1].persons[0].allergies[0]&quot;).value(&quot;shellfish&quot;))</span>
+<span class="fc" id="L98">				.andExpect(MockMvcResultMatchers.jsonPath(&quot;$[1].persons[2].email&quot;).value(&quot;aly@imail.com&quot;));</span>
+
+<span class="fc" id="L100">	}</span>
+
+	@Test
+	public void testfirestationIT() throws Exception {
+
+<span class="fc" id="L105">		mockMvc.perform(get(&quot;/firestation&quot;)</span>
+<span class="fc" id="L106">						.param(&quot;stationNumber&quot;,&quot;4&quot;)</span>
+<span class="fc" id="L107">						.contentType(MediaType.APPLICATION_JSON)</span>
+<span class="fc" id="L108">						.accept(MediaType.APPLICATION_JSON))</span>
+<span class="fc" id="L109">				.andExpect(status().isOk())</span>
+<span class="fc" id="L110">				.andExpect(MockMvcResultMatchers.jsonPath(&quot;$.persons[0].firstName&quot;).value(&quot;Lily&quot;))</span>
+<span class="fc" id="L111">				.andExpect(MockMvcResultMatchers.jsonPath(&quot;$.persons[1].lastName&quot;).value(&quot;Cooper&quot;))</span>
+<span class="fc" id="L112">				.andExpect(MockMvcResultMatchers.jsonPath(&quot;$.persons[2].address&quot;).value(&quot;112 Steppes Pl&quot;))</span>
+<span class="fc" id="L113">				.andExpect(MockMvcResultMatchers.jsonPath(&quot;$.persons[3].phone&quot;).value(&quot;841-874-9888&quot;));</span>
+
+<span class="fc" id="L115">	}</span>
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

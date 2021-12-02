@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PersonController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">safetynets$All_in_safetynets.exec</a> &gt; <a href="index.source.html" class="el_package">com.openclassrooms.safetynets.controller</a> &gt; <span class="el_source">PersonController.java</span></div><h1>PersonController.java</h1><pre class="source lang-java linenums">package com.openclassrooms.safetynets.controller;
+
+import com.fasterxml.jackson.annotation.JsonView;
+import com.openclassrooms.safetynets.dto.AddressDTO;
+import com.openclassrooms.safetynets.dto.PersonDTO;
+import com.openclassrooms.safetynets.model.*;
+import com.openclassrooms.safetynets.repository.PersonRepo;
+import com.openclassrooms.safetynets.services.PersonService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.*;
+
+@RestController
+<span class="fc" id="L17">public class PersonController {</span>
+
+	@Autowired
+	private PersonRepo personRepo;
+
+	@GetMapping(value = &quot;person&quot;)
+	public List&lt;Person&gt; listePersonne() {
+<span class="fc" id="L24">		return personRepo.findAll();</span>
+	}
+
+	@GetMapping(value = &quot;person/{id}&quot;)
+	public Person afficherUnePersonne(@PathVariable int id) {
+<span class="fc" id="L29">		return personRepo.findById(id);</span>
+	}
+
+	@PostMapping(value = &quot;person&quot;)
+	public ResponseEntity&lt;Person&gt; addPerson(@RequestBody Person person) {
+
+<span class="fc" id="L35">		Person person1 = personRepo.save(person);</span>
+
+<span class="fc" id="L37">		return ResponseEntity.ok(person1);</span>
+	}
+
+	@DeleteMapping(value = &quot;person/{id}&quot;)
+	public void deletePerson(@PathVariable long id) {
+<span class="fc" id="L42">		personRepo.deleteById(id);</span>
+<span class="fc" id="L43">	}</span>
+
+
+	@PutMapping(value = &quot;/person/{id}&quot;)
+	public ResponseEntity&lt;Person&gt; updatePerson(@PathVariable(&quot;id&quot;) long id, @RequestBody Person person) {
+<span class="fc" id="L48">		Optional&lt;Person&gt; personData = Optional.ofNullable(personRepo.findById(id));</span>
+
+<span class="pc bpc" id="L50" title="1 of 2 branches missed.">		if (personData.isPresent()) {</span>
+<span class="fc" id="L51">			Person person1 = personData.get();</span>
+<span class="fc" id="L52">			person1.setAddress(person.getAddress());</span>
+<span class="fc" id="L53">			person1.setCity(person.getCity());</span>
+<span class="fc" id="L54">			person1.setZip(person.getZip());</span>
+<span class="fc" id="L55">			person1.setEmail(person.getEmail());</span>
+<span class="fc" id="L56">			person1.setPhone(person.getPhone());</span>
+<span class="fc" id="L57">			return new ResponseEntity&lt;&gt;(personRepo.save(person1), HttpStatus.OK);</span>
+		} else {
+<span class="nc" id="L59">			return new ResponseEntity&lt;&gt;(HttpStatus.NOT_FOUND);</span>
+		}
+	}
+
+	@JsonView({PersonViews.Normal.class})
+	@GetMapping(value = &quot;/childAlert&quot;)
+	public PersonDTO listChildAtAnAddress(@RequestParam(value = &quot;address&quot;) String address) {
+
+<span class="fc" id="L67">		return PersonService.listChildAtAnAddressService(personRepo, address);</span>
+
+	}
+
+	@GetMapping(value = &quot;/fire&quot;)
+	public AddressDTO listPeopleAtAStation(@RequestParam(value = &quot;address&quot;) String address) {
+
+<span class="fc" id="L74">		return PersonService.listPeopleAtAStationService(personRepo,address);</span>
+
+	}
+
+	@GetMapping(value = &quot;/personInfo&quot;)
+	public AddressDTO searchByName(@RequestParam Map&lt;String,String&gt; requestParams) {
+
+<span class="fc" id="L81">		return PersonService.searchByNameService(personRepo, requestParams);</span>
+
+	}
+
+	@JsonView({PersonViews.Mail.class})
+	@GetMapping(value = &quot;/communityEmail&quot;)
+	public PersonDTO listPeopleAtACity(@RequestParam(value = &quot;city&quot;) String city) {
+
+<span class="fc" id="L89">		List&lt;Person&gt; persons = personRepo.findAllByCity(city);</span>
+
+<span class="fc" id="L91">		PersonDTO listPerson = new PersonDTO();</span>
+
+<span class="fc" id="L93">		listPerson.setEmails(persons);</span>
+
+<span class="fc" id="L95">		return listPerson;</span>
+
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

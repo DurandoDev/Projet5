@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PersonService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">safetynets$All_in_safetynets.exec</a> &gt; <a href="index.source.html" class="el_package">com.openclassrooms.safetynets.services</a> &gt; <span class="el_source">PersonService.java</span></div><h1>PersonService.java</h1><pre class="source lang-java linenums">package com.openclassrooms.safetynets.services;
+
+import com.openclassrooms.safetynets.dto.AddressDTO;
+import com.openclassrooms.safetynets.dto.PersonDTO;
+import com.openclassrooms.safetynets.dto.PersonWithAllergiesDTO;
+import com.openclassrooms.safetynets.model.Firestation;
+import com.openclassrooms.safetynets.model.Medicalrecords;
+import com.openclassrooms.safetynets.model.Person;
+import com.openclassrooms.safetynets.repository.PersonRepo;
+
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
+<span class="nc" id="L19">public class PersonService {</span>
+
+	public static PersonDTO listChildAtAnAddressService(PersonRepo personRepo, String address) {
+<span class="fc" id="L22">		LocalDate dateNow = LocalDate.now();</span>
+<span class="fc" id="L23">		dateNow = dateNow.minusYears(18);</span>
+
+<span class="fc" id="L25">		ZoneId defaultZoneId = ZoneId.systemDefault();</span>
+
+<span class="fc" id="L27">		Date date = Date.from(dateNow.atStartOfDay(defaultZoneId).toInstant());</span>
+
+<span class="fc" id="L29">		List&lt;Person&gt; personList = personRepo.findPersonUnder18YearsAtAnAddress(address, date);</span>
+
+<span class="fc" id="L31">		List&lt;Person&gt; nbPersons = personRepo.findPersonOver18YearsAtAnAddress(address, date);</span>
+
+<span class="fc" id="L33">		PersonDTO listPerson = new PersonDTO();</span>
+
+<span class="fc" id="L35">		listPerson.setChildren(personList);</span>
+<span class="fc" id="L36">		listPerson.setPersons(nbPersons);</span>
+
+<span class="fc" id="L38">		return listPerson;</span>
+	}
+
+	public static AddressDTO listPeopleAtAStationService(PersonRepo personRepo, String address) {
+<span class="fc" id="L42">		List&lt;Person&gt; persons = personRepo.findPersonAtAnAddress(address);</span>
+<span class="fc" id="L43">		List&lt;Firestation&gt; firestations = personRepo.findFirestationsByAddress(address);</span>
+
+<span class="fc" id="L45">		List&lt;PersonWithAllergiesDTO&gt; allergies =new ArrayList&lt;&gt;();</span>
+
+<span class="fc bfc" id="L47" title="All 2 branches covered.">		for (Person p: persons) {</span>
+<span class="fc" id="L48">			Medicalrecords medicalrecord = personRepo.findPersonsMedicalRecord(p.getId());</span>
+
+<span class="fc" id="L50">			int age = Period.between(medicalrecord.getBirthdate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(), LocalDate.now()).getYears();</span>
+
+<span class="fc" id="L52">			PersonWithAllergiesDTO allergiesDTO = new PersonWithAllergiesDTO();</span>
+<span class="fc" id="L53">			allergiesDTO.setAllergies(medicalrecord.getAllergies());</span>
+<span class="fc" id="L54">			allergiesDTO.setMedications(medicalrecord.getMedications());</span>
+<span class="fc" id="L55">			allergiesDTO.setName(p.getFirstName() + &quot; &quot; + p.getLastName());</span>
+<span class="fc" id="L56">			allergiesDTO.setPhoneNum(p.getPhone());</span>
+<span class="fc" id="L57">			allergiesDTO.setAge(age);</span>
+<span class="fc" id="L58">			allergiesDTO.setEmail(p.getEmail());</span>
+<span class="fc" id="L59">			allergiesDTO.setAddress(p.getAddress());</span>
+
+<span class="fc" id="L61">			allergies.add(allergiesDTO);</span>
+<span class="fc" id="L62">		}</span>
+
+<span class="fc" id="L64">		AddressDTO dto = new AddressDTO();</span>
+
+<span class="fc" id="L66">		dto.setAddress(address);</span>
+<span class="fc" id="L67">		dto.setFirestationNumber(firestations.get(0).getStation());</span>
+<span class="fc" id="L68">		dto.setPersons(allergies);</span>
+
+<span class="fc" id="L70">		return dto;</span>
+	}
+
+	public static AddressDTO searchByNameService(PersonRepo personRepo, Map&lt;String,String&gt; requestParams){
+<span class="fc" id="L74">		String firstName = requestParams.get(&quot;firstName&quot;);</span>
+<span class="fc" id="L75">		String lastName = requestParams.get(&quot;lastName&quot;);</span>
+
+<span class="fc" id="L77">		List&lt;Person&gt; personList = personRepo.findAllByLastName(lastName);</span>
+
+<span class="fc" id="L79">		List&lt;PersonWithAllergiesDTO&gt; allergies =new ArrayList&lt;&gt;();</span>
+
+<span class="fc bfc" id="L81" title="All 2 branches covered.">		for (Person p: personList) {</span>
+<span class="fc" id="L82">			Medicalrecords medicalrecord = personRepo.findPersonsMedicalRecord(p.getId());</span>
+
+<span class="fc" id="L84">			int age = Period.between(medicalrecord.getBirthdate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(), LocalDate.now()).getYears();</span>
+
+<span class="fc" id="L86">			String address = personRepo.findAddressOfAPerson(p.getLastName(), p.getFirstName());</span>
+<span class="fc" id="L87">			String email = personRepo.findMailOfAPerson(p.getLastName(), p.getFirstName());</span>
+
+<span class="fc" id="L89">			PersonWithAllergiesDTO allergiesDTO = new PersonWithAllergiesDTO();</span>
+<span class="fc" id="L90">			allergiesDTO.setAllergies(medicalrecord.getAllergies());</span>
+<span class="fc" id="L91">			allergiesDTO.setMedications(medicalrecord.getMedications());</span>
+<span class="fc" id="L92">			allergiesDTO.setName(p.getFirstName() + &quot; &quot; + p.getLastName());</span>
+<span class="fc" id="L93">			allergiesDTO.setPhoneNum(p.getPhone());</span>
+<span class="fc" id="L94">			allergiesDTO.setAge(age);</span>
+<span class="fc" id="L95">			allergiesDTO.setAddress(address);</span>
+<span class="fc" id="L96">			allergiesDTO.setEmail(email);</span>
+
+<span class="fc" id="L98">			allergies.add(allergiesDTO);</span>
+<span class="fc" id="L99">		}</span>
+
+<span class="fc" id="L101">		AddressDTO dto = new AddressDTO();</span>
+
+<span class="fc" id="L103">		dto.setPersons(allergies);</span>
+
+<span class="fc" id="L105">		return dto;</span>
+	}
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
